@@ -2,52 +2,71 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Firebase Auth</title>
+  <title>Firebase Auth - Sinda&Iman</title>
 </head>
+
 <body>
 
-  <h1>Welcome to our Mini Challenge Firebase</h1>
+  <header style="text-align: center; margin-bottom: 20px;">
+    <h1>Welcome to our Mini Challenge Firebase</h1>
+    <p style="font-style: italic; color: #555;">Réalisé par : <strong>Sinda Ben Messaouda</strong> et <strong>Iman Solaih</strong></p>
+  </header>
+  
+  <main>
+      <!-- ===== AUTH SECTION ===== -->
+      <section id="auth-section">
 
-  <!-- ===== AUTH SECTION ===== -->
-  <div id="auth-section">
+        <h2>Bienvenue !</h2>
+        <p>Veuillez vous inscrire ou vous connecter pour accéder au fil d'actualité.</p>
 
-    <h2>Inscription</h2>
-    <input type="email" id="signup-email" placeholder="Email">
-    <input type="password" id="signup-password" placeholder="Password">
-    <button id="signup-btn">Sign Up</button>
-    <p id="signup-error" style="color: red; font-size: 14px; margin-top: 5px;"></p>
+        <form class="auth-box" id="signup-form" novalidate onsubmit="return false;">
+          <h2>Inscription</h2>
+          <input type="email" id="signup-email" placeholder="Votre email">
+          <input type="password" id="signup-password" placeholder="Mot de passe (8 caractères min)">
+          <button id="signup-btn">S'inscrire </button>
+          <p id="signup-error" style="color: red; font-size: 14px; margin-top: 5px; font-weight: bold; min-height: 20px;"></p>
+        </form>
 
-    <br><hr><br>
+        <br><hr><br>
 
-    <h2>Connexion</h2>
-    <input type="email" id="login-email" placeholder="Email">
-    <input type="password" id="login-password" placeholder="Password">
-    <button id="login-btn">Login</button>
-    <p id="login-error" style="color: red; font-size: 14px; margin-top: 5px;"></p>
+        <form class="auth-box" id="login-form" novalidate onsubmit="return false;">
+          <h2>Connexion</h2>
+          <input type="email" id="login-email" placeholder="Votre email">
+          <input type="password" id="login-password" placeholder="Mot de passe">
+          <button id="login-btn">Se connecter</button>
+          <p id="login-error" style="color: red; font-size: 14px; margin-top: 5px; font-weight: bold; min-height: 20px;"></p>
+        </form>
 
-  </div>
+      </section>
 
-  <!-- ===== USER SECTION (visible connecté) ===== -->
-  <div id="user-section" style="display:none;">
-    
-    <p>Connecté en tant que : <span id="user-email"></span></p>
-    <button id="logout-btn">Logout</button>
+      <!-- ===== USER SECTION (visible connecté) ===== -->
+      <section id="user-section" style="display:none;">
 
-    <hr>
+        <header>
+          <p>Connecté en tant que : <span id="user-email"></span></p>
+          <button id="logout-btn">Se déconnecter</button>
+        </header>
 
-    <div id="publication-section">
-      <textarea id="message-input" placeholder="Quoi de neuf ?" rows="3"></textarea>
-      <button id="publish-btn">Publier</button>
-    </div>
+        <hr>
 
-    <hr>
+        <section id="publication-section">
+          <textarea id="message-input" placeholder="Partagez une actualité avec le groupe..." rows="3"></textarea>
+          <button id="publish-btn">Publier</button>
+        </section>
 
-    <h3>Fil d'actualité</h3>
+        <hr>
 
-    <div id="messages-list">
-      </div>
+        <h3>Fil d'actualité</h3>
 
-  </div>
-      <script type="module" src="app.js"></script>
+        <section id="messages-list">
+        </section>
+
+      </section>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+
 </body>
+
 </html>
