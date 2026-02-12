@@ -15,26 +15,39 @@
     <input type="email" id="signup-email" placeholder="Email">
     <input type="password" id="signup-password" placeholder="Password">
     <button id="signup-btn">Sign Up</button>
+    <p id="signup-error" style="color: red; font-size: 14px; margin-top: 5px;"></p>
+
+    <br><hr><br>
 
     <h2>Connexion</h2>
     <input type="email" id="login-email" placeholder="Email">
     <input type="password" id="login-password" placeholder="Password">
     <button id="login-btn">Login</button>
+    <p id="login-error" style="color: red; font-size: 14px; margin-top: 5px;"></p>
 
   </div>
 
   <!-- ===== USER SECTION (visible connecté) ===== -->
   <div id="user-section" style="display:none;">
+    
     <p>Connecté en tant que : <span id="user-email"></span></p>
     <button id="logout-btn">Logout</button>
 
     <hr>
 
     <div id="publication-section">
-      <p>Formulaire de publication (visible connecté)</p>
+      <textarea id="message-input" placeholder="Quoi de neuf ?" rows="3"></textarea>
+      <button id="publish-btn">Publier</button>
     </div>
-  </div>
 
-  <script type="module" src="app.js"></script>
+    <hr>
+
+    <h3>Fil d'actualité</h3>
+
+    <div id="messages-list">
+      </div>
+
+  </div>
+      <script type="module" src="app.js"></script>
 </body>
 </html>

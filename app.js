@@ -7,9 +7,17 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyB01YSH05BDlkoYW1nzUjo_6i62pCOLsC8",
@@ -26,6 +34,7 @@ const firebaseConfig = {
 // ===== INITIALISATION =====
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // ===== ELEMENTS HTML =====
 const signupBtn = document.getElementById("signup-btn");
@@ -42,8 +51,30 @@ const authSection = document.getElementById("auth-section");
 const userSection = document.getElementById("user-section");
 const userEmailSpan = document.getElementById("user-email");
 
+function gererErreur(error) {
+  console.log(error.code); 
+  switch (error.code) {
+    case "auth/invalid-email":
+      return "L'adresse email n'est pas valide.";
+    case "auth/user-not-found":
+      return "Aucun compte ne correspond à cet email.";
+    case "auth/wrong-password":
+      return "Mot de passe incorrect.";
+    case "auth/invalid-credential":
+      return "Email ou mot de passe incorrect.";
+    case "auth/email-already-in-use":
+      return "Cet email est déjà utilisé par un autre compte.";
+    case "auth/weak-password":
+      return "Le mot de passe doit faire au moins 6 caractères.";
+    case "auth/missing-password":
+      return "Veuillez entrer un mot de passe.";
+    default:
+      return "Une erreur est survenue : " + error.message;
+  }
+}
 // ===== INSCRIPTION =====
 signupBtn.addEventListener("click", async () => {
+  signupError.textContent = ""; 
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -52,12 +83,14 @@ signupBtn.addEventListener("click", async () => {
     );
     console.log("User created:", userCredential.user.email);
   } catch (error) {
-    alert(error.message);
+    
+    signupError.textContent = gererErreur(error);
   }
 });
 
 // ===== CONNEXION =====
 loginBtn.addEventListener("click", async () => {
+  loginError.textContent = ""; 
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
@@ -66,7 +99,8 @@ loginBtn.addEventListener("click", async () => {
     );
     console.log("User logged in:", userCredential.user.email);
   } catch (error) {
-    alert(error.message);
+    
+    loginError.textContent = gererErreur(error);
   }
 });
 
@@ -87,3 +121,61 @@ onAuthStateChanged(auth, (user) => {
     userEmailSpan.textContent = "";
   }
 });
+
+
+
+// ===== ELEMENTS HTML  =====
+const messageInput = document.getElementById("message-input");
+const publishBtn = document.getElementById("publish-btn");
+const messagesList = document.getElementById("messages-list");
+
+// ===== PUBLICATION (Écriture) =====
+publishBtn.addEventListener("click", async () => {
+  if (messageInput.value.trim() === "") return;
+  
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      await addDoc(collection(db, "messages"), {
+        content: messageInput.value,
+        email: user.email,
+        uid: user.uid,
+        timestamp: serverTimestamp() 
+      });
+      messageInput.value = ""; 
+      console.log("Message publié !");
+    } else {
+        alert("Vous devez être connecté pour publier.");
+    }
+  } catch (error) {
+    console.error("Erreur d'écriture : ", error);
+    alert("Erreur lors de la publication");
+  }
+});
+
+// ===== AFFICHAGE =====
+const q = query(collection(db, "messages"), orderBy("timestamp", "desc"));
+
+onSnapshot(q, (snapshot) => {
+  messagesList.innerHTML = ""; 
+
+  snapshot.forEach((doc) => {
+    const msg = doc.data();
+    
+    const msgElement = document.createElement("div");
+    msgElement.style.border = "1px solid #ccc";
+    msgElement.style.margin = "10px 0";
+    msgElement.style.padding = "10px";
+    
+    const date = msg.timestamp ? msg.timestamp.toDate().toLocaleString() : "À l'instant";
+
+    msgElement.innerHTML = `
+      <strong>${msg.email}</strong> <small>(${date})</small>
+      <p>${msg.content}</p>
+    `;
+    
+    messagesList.appendChild(msgElement);
+  });
+});
+
+
