@@ -50,11 +50,13 @@ const logoutBtn = document.getElementById("logout-btn");
 const signupEmail = document.getElementById("signup-email");
 const signupPassword = document.getElementById("signup-password");
 const signupError = document.getElementById("signup-error");
+signupError.hidden =true;
 
 // Champs Connexion
 const loginEmail = document.getElementById("login-email");
 const loginPassword = document.getElementById("login-password");
 const loginError = document.getElementById("login-error");
+loginError.hidden =true;
 
 // Sections
 const authSection = document.getElementById("auth-section");
@@ -97,16 +99,19 @@ signupForm.addEventListener("submit", async (e) => {
 
   if (!email.includes("@")) {
     signupError.textContent = "Il manque le '@' dans le mail.";
+    signupError.hidden=false;
     return; 
   }
 
   if (!email.includes(".") || email.lastIndexOf(".") < email.indexOf("@")) {
     signupError.textContent = "Format invalide (il manque le .com ou le domaine).";
+    signupError.hidden=false;
     return;
   }
 
   if (password.length < 8) {
     signupError.textContent = "Le mot de passe doit être minimum 8 caractères.";
+    signupError.hidden=false;
     return;
   }
 
@@ -115,6 +120,7 @@ signupForm.addEventListener("submit", async (e) => {
     console.log("User created:", userCredential.user.email);
   } catch (error) {
     signupError.textContent = gererErreur(error);
+    signupError.hidden=false;
   }
 });
 
@@ -132,6 +138,7 @@ loginForm.addEventListener("submit", async (e) => {
     console.log("User logged in:", userCredential.user.email);
   } catch (error) {
     loginError.textContent = gererErreur(error);
+    loginError.hidden=false;
   }
 });
 
